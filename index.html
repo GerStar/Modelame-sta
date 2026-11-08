@@ -218,4 +218,232 @@
             color: #8d99ae;
             border: none;
             font-size: 0.8rem;
-            text
+            text-decoration: underline;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        .vote-notice {
+            background: #2a9d8f;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Modelame ésta</h1>
+        <p class="subtitle">¡Edición Cumpleaños de El Monch! 🎂</p>
+
+        <!-- PANTALLA DE CONFIGURACIÓN -->
+        <div id="setup-screen" class="card">
+            <div class="selector-group">
+                <label for="time-select">Duración del temporizador:</label>
+                <select id="time-select">
+                    <option value="1">1 Minuto</option>
+                    <option value="2" selected>2 Minutos</option>
+                    <option value="3">3 Minutos</option>
+                    <option value="4">4 Minutos</option>
+                    <option value="5">5 Minutos</option>
+                    <option value="6">6 Minutos</option>
+                    <option value="7">7 Minutos</option>
+                    <option value="8">8 Minutos</option>
+                    <option value="9">9 Minutos</option>
+                    <option value="10">10 Minutos</option>
+                </select>
+            </div>
+            <button id="start-btn" class="btn-primary">¡EMPEZAR RONDA!</button>
+            <br>
+            <button id="test-audio-btn" class="audio-test-btn">🔊 Probar sonido de alarma</button>
+        </div>
+
+        <!-- PANTALLA DE JUEGO -->
+        <div id="game-screen" class="card hidden">
+            <div class="prompt-box">
+                <span>Tenés que modelar:</span>
+                <div id="prompt-text" class="prompt-text">---</div>
+            </div>
+
+            <div id="timer-display" class="timer-display">00:00</div>
+            <div class="progress-bar-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+
+            <div class="btn-group">
+                <button id="pause-btn" class="btn-secondary">Pausar</button>
+                <button id="change-prompt-btn" class="btn-outline">Cambiar Objeto</button>
+                <button id="end-btn" class="btn-primary">Terminar</button>
+            </div>
+
+            <div id="vote-notice" class="vote-notice hidden">
+                🔔 ¡TIEMPO FINALIZADO! 🔔<br>Manos arriba. ¡Muestren sus figuras y empiecen la votación!
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lista de más de 50 objetos y animales sencillos
+        const consignas = [
+            "Caracol", "Rana", "Perro", "Gato", "Cocodrilo", "Patito", "Auto", "Camioneta", "Árbol", 
+            "Elefante", "Serpiente", "Pez", "Flor", "Manzana", "Banana", "Zapatilla", "Sombrero", 
+            "Casa", "Sol", "Luna", "Estrella", "Helado", "Pizza", "Hueso", "Guitarra", "Pelota", 
+            "Muñeco de nieve", "Mariposa", "Tortuga", "Lentes de sol", "Avión", "Barco", "Reloj", 
+            "Taza de café", "Hamburguesa", "Cangrejo", "Pulpo", "Zapato", "Teléfono celular", 
+            "Micrófono", "Lápiz", "Dinosaurio", "Oso", "Silla", "Mesa", "Llama / Alpaca", 
+            "Corazón", "Cactus", "Botella", "Hongo", "Pájaro", "Avión de papel", "Tarta / Pastel"
+        ];
+
+        let totalTimeSeconds = 120;
+        let timeRemaining = 120;
+        let timerInterval = null;
+        let isPaused = false;
+        let audioCtx = null;
+
+        const setupScreen = document.getElementById('setup-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const timeSelect = document.getElementById('time-select');
+        const startBtn = document.getElementById('start-btn');
+        const promptText = document.getElementById('prompt-text');
+        const timerDisplay = document.getElementById('timer-display');
+        const progressBar = document.getElementById('progress-bar');
+        const pauseBtn = document.getElementById('pause-btn');
+        const changePromptBtn = document.getElementById('change-prompt-btn');
+        const endBtn = document.getElementById('end-btn');
+        const voteNotice = document.getElementById('vote-notice');
+        const testAudioBtn = document.getElementById('test-audio-btn');
+
+        // Inicializar AudioContext en interacción del usuario
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // Sonido de Alarma usando Web Audio API (Sin archivos MP3 externos)
+        function playAlarmSound() {
+            initAudio();
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            const now = audioCtx.currentTime;
+            
+            // Secuencia de beeps de alarma festiva
+            const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+            notes.forEach((freq, idx) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, now + (idx * 0.15));
+
+                gain.gain.setValueAtTime(0.3, now + (idx * 0.15));
+                gain.gain.exponentialRampToValueAtTime(0.001, now + (idx * 0.15) + 0.3);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start(now + (idx * 0.15));
+                osc.stop(now + (idx * 0.15) + 0.3);
+            });
+        }
+
+        testAudioBtn.addEventListener('click', () => {
+            playAlarmSound();
+        });
+
+        function getRandomPrompt() {
+            const randomIndex = Math.floor(Math.random() * consignas.length);
+            return consignas[randomIndex];
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function updateTimerDisplay() {
+            timerDisplay.textContent = formatTime(timeRemaining);
+            const percentage = (timeRemaining / totalTimeSeconds) * 100;
+            progressBar.style.width = `${percentage}%`;
+
+            if (timeRemaining <= 30) {
+                timerDisplay.classList.add('warning');
+                progressBar.classList.add('warning');
+            } else {
+                timerDisplay.classList.remove('warning');
+                progressBar.classList.remove('warning');
+            }
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            isPaused = false;
+            pauseBtn.textContent = 'Pausar';
+
+            timerInterval = setInterval(() => {
+                if (!isPaused) {
+                    timeRemaining--;
+                    updateTimerDisplay();
+
+                    if (timeRemaining <= 0) {
+                        clearInterval(timerInterval);
+                        endGame();
+                    }
+                }
+            }, 1000);
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+            playAlarmSound();
+            voteNotice.classList.remove('hidden');
+            pauseBtn.classList.add('hidden');
+            changePromptBtn.classList.add('hidden');
+            endBtn.textContent = 'Nueva Ronda';
+        }
+
+        startBtn.addEventListener('click', () => {
+            initAudio();
+            const selectedMinutes = parseInt(timeSelect.value);
+            totalTimeSeconds = selectedMinutes * 60;
+            timeRemaining = totalTimeSeconds;
+
+            promptText.textContent = getRandomPrompt();
+            voteNotice.classList.add('hidden');
+            pauseBtn.classList.remove('hidden');
+            changePromptBtn.classList.remove('hidden');
+            endBtn.textContent = 'Terminar';
+
+            updateTimerDisplay();
+            setupScreen.classList.add('hidden');
+            gameScreen.classList.remove('hidden');
+
+            startTimer();
+        });
+
+        pauseBtn.addEventListener('click', () => {
+            isPaused = !isPaused;
+            pauseBtn.textContent = isPaused ? 'Reanudar' : 'Pausar';
+        });
+
+        changePromptBtn.addEventListener('click', () => {
+            promptText.textContent = getRandomPrompt();
+        });
+
+        endBtn.addEventListener('click', () => {
+            if (endBtn.textContent === 'Nueva Ronda') {
+                gameScreen.classList.add('hidden');
+                setupScreen.classList.remove('hidden');
+            } else {
+                endGame();
+            }
+        });
+    </script>
+</body>
+</html>
