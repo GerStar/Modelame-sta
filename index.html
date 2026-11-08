@@ -98,7 +98,7 @@
         }
 
         .prompt-box {
-            min-height: 180px;
+            min-height: 190px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -119,7 +119,7 @@
         }
 
         .prompt-text {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: bold;
             color: var(--accent);
             line-height: 1.2;
@@ -321,10 +321,10 @@
     </div>
 
     <script>
-        // SVG gráficos estilo 3D plastilina
+        // Banco de gráficos SVG únicos y específicos para cada consigna
         const svgIcons = {
             caracol: `<svg viewBox="0 0 100 100"><circle cx="45" cy="50" r="30" fill="#ffb703" stroke="#fb8500" stroke-width="4"/><circle cx="45" cy="50" r="20" fill="#fb8500"/><path d="M15 75 Q45 85 85 75 Q95 75 90 65 Q85 55 75 60 Z" fill="#2a9d8f"/><circle cx="82" cy="52" r="4" fill="#fff"/><circle cx="83" cy="52" r="2" fill="#000"/><path d="M78 58 Q72 45 70 40 M82 58 Q85 45 88 40" stroke="#2a9d8f" stroke-width="3" stroke-linecap="round"/></svg>`,
-            rana: `<svg viewBox="0 0 100 100"><ellipse cx="50" cy="60" rx="35" ry="25" fill="#52b788"/><circle cx="35" cy="35" r="14" fill="#52b788"/><circle cx="65" cy="35" r="14" fill="#52b788"/><circle cx="35" cy="35" r="8" fill="#fff"/><circle cx="65" cy="35" r="8" fill="#fff"/><circle cx="35" cy="35" r="4" fill="#000"/><circle cx="65" cy="65" r="4" fill="#000"/><path d="M35 65 Q50 75 65 65" stroke="#1b4332" stroke-width="4" stroke-linecap="round" fill="none"/></svg>`,
+            rana: `<svg viewBox="0 0 100 100"><ellipse cx="50" cy="60" rx="35" ry="25" fill="#52b788"/><circle cx="35" cy="35" r="14" fill="#52b788"/><circle cx="65" cy="35" r="14" fill="#52b788"/><circle cx="35" cy="35" r="8" fill="#fff"/><circle cx="65" cy="35" r="8" fill="#fff"/><circle cx="35" cy="35" r="4" fill="#000"/><circle cx="65" cy="35" r="4" fill="#000"/><path d="M35 65 Q50 75 65 65" stroke="#1b4332" stroke-width="4" stroke-linecap="round" fill="none"/></svg>`,
             perro: `<svg viewBox="0 0 100 100"><circle cx="50" cy="45" r="28" fill="#d4a373"/><ellipse cx="25" cy="45" rx="8" ry="18" fill="#bc6c25"/><ellipse cx="75" cy="45" rx="8" ry="18" fill="#bc6c25"/><ellipse cx="50" cy="55" rx="12" ry="8" fill="#fefae0"/><circle cx="50" cy="52" r="4" fill="#2b2d42"/><circle cx="40" cy="40" r="3" fill="#2b2d42"/><circle cx="60" cy="40" r="3" fill="#2b2d42"/></svg>`,
             gato: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="28" fill="#f72585"/><polygon points="25,30 35,10 45,28" fill="#b5179e"/><polygon points="75,30 65,10 55,28" fill="#b5179e"/><circle cx="40" cy="45" r="4" fill="#4cc9f0"/><circle cx="60" cy="45" r="4" fill="#4cc9f0"/><polygon points="50,52 46,57 54,57" fill="#7209b7"/><path d="M30 55 L15 52 M30 58 L15 60 M70 55 L85 52 M70 58 L85 60" stroke="#4cc9f0" stroke-width="2"/></svg>`,
             cocodrilo: `<svg viewBox="0 0 100 100"><path d="M10 60 Q50 40 90 60 L85 70 Q50 55 15 70 Z" fill="#38b000"/><polygon points="25,48 30,42 35,48 40,42 45,48 50,42 55,48" fill="#70e000"/><circle cx="75" cy="48" r="5" fill="#fff"/><circle cx="75" cy="48" r="2" fill="#000"/></svg>`,
@@ -337,12 +337,43 @@
             flor: `<svg viewBox="0 0 100 100"><rect x="47" y="50" width="6" height="40" fill="#2a9d8f"/><circle cx="50" cy="30" r="10" fill="#e76f51"/><circle cx="50" cy="12" r="9" fill="#f4a261"/><circle cx="68" cy="30" r="9" fill="#f4a261"/><circle cx="50" cy="48" r="9" fill="#f4a261"/><circle cx="32" cy="30" r="9" fill="#f4a261"/></svg>`,
             manzana: `<svg viewBox="0 0 100 100"><circle cx="42" cy="52" r="22" fill="#e63946"/><circle cx="58" cy="52" r="22" fill="#e63946"/><path d="M50 34 Q53 20 60 15" stroke="#6c584c" stroke-width="4" fill="none"/><path d="M50 28 Q65 25 62 35 Z" fill="#52b788"/></svg>`,
             banana: `<svg viewBox="0 0 100 100"><path d="M20 30 Q30 80 80 70 Q55 85 25 45 Z" fill="#ffb703" stroke="#fb8500" stroke-width="2"/></svg>`,
+            zapatilla: `<svg viewBox="0 0 100 100"><path d="M15 65 Q15 45 40 45 L80 45 Q90 45 92 55 Q95 65 85 68 L20 68 Z" fill="#4cc9f0"/><rect x="45" y="38" width="30" height="10" fill="#f72585"/><line x1="30" y1="55" x2="70" y2="55" stroke="#fff" stroke-width="3"/></svg>`,
             sombrero: `<svg viewBox="0 0 100 100"><ellipse cx="50" cy="70" rx="40" ry="10" fill="#2b2d42"/><rect x="28" y="30" width="44" height="40" rx="5" fill="#2b2d42"/><rect x="28" y="62" width="44" height="8" fill="#d90429"/></svg>`,
             casa: `<svg viewBox="0 0 100 100"><polygon points="50,20 15,48 85,48" fill="#e63946"/><rect x="25" y="48" width="50" height="40" fill="#f1faee"/><rect x="42" y="63" width="16" height="25" fill="#a8dadc"/><rect x="32" y="55" width="10" height="10" fill="#457b9d"/><rect x="58" y="55" width="10" height="10" fill="#457b9d"/></svg>`,
             sol: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#ffb703"/><path d="M50 15 L50 25 M50 75 L50 85 M15 50 L25 50 M75 50 L85 50 M25 25 L32 32 M68 68 L75 75 M25 75 L32 68 M68 32 L75 25" stroke="#ffb703" stroke-width="5" stroke-linecap="round"/></svg>`,
+            luna: `<svg viewBox="0 0 100 100"><path d="M60 20 A30 30 0 1 1 40 80 A35 35 0 1 0 60 20 Z" fill="#ffb703"/></svg>`,
+            estrella: `<svg viewBox="0 0 100 100"><polygon points="50,15 61,38 86,41 68,59 73,84 50,72 27,84 32,59 14,41 39,38" fill="#ffb703"/></svg>`,
             helado: `<svg viewBox="0 0 100 100"><polygon points="50,88 33,48 67,48" fill="#e76f51"/><circle cx="50" cy="42" r="16" fill="#ffb703"/><circle cx="50" cy="30" r="14" fill="#ff70a6"/><circle cx="50" cy="18" r="4" fill="#d90429"/></svg>`,
+            pizza: `<svg viewBox="0 0 100 100"><path d="M50 15 L85 80 L15 80 Z" fill="#ffb703"/><path d="M50 30 L75 75 L25 75 Z" fill="#e76f51"/><circle cx="45" cy="50" r="5" fill="#d90429"/><circle cx="58" cy="65" r="5" fill="#d90429"/><circle cx="38" cy="68" r="4" fill="#d90429"/></svg>`,
+            hueso: `<svg viewBox="0 0 100 100"><path d="M25 35 C20 30 20 20 30 20 C38 20 42 30 50 45 C58 30 62 20 70 20 C80 20 80 30 75 35 C80 40 80 50 70 50 C62 50 58 40 50 25 C42 40 38 50 30 50 C20 50 20 40 25 35 Z" fill="#fefae0" transform="rotate(45 50 35)"/></svg>`,
             guitarra: `<svg viewBox="0 0 100 100"><circle cx="40" cy="65" r="18" fill="#b08968"/><circle cx="40" cy="45" r="14" fill="#b08968"/><rect x="37" y="12" width="6" height="30" fill="#7f5539"/><circle cx="40" cy="65" r="5" fill="#2b2d42"/></svg>`,
-            default: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="35" fill="#ffb703"/><text x="50" y="65" font-size="45" font-weight="bold" text-anchor="middle" fill="#16213e">?</text></svg>`
+            pelota: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="32" fill="#e63946"/><path d="M22 35 Q50 60 78 35 M22 65 Q50 40 78 65" stroke="#f1faee" stroke-width="4" fill="none"/></svg>`,
+            nieve: `<svg viewBox="0 0 100 100"><circle cx="50" cy="65" r="25" fill="#fff"/><circle cx="50" cy="40" r="18" fill="#fff"/><circle cx="50" cy="22" r="12" fill="#fff"/><circle cx="46" cy="38" r="2" fill="#000"/><circle cx="54" cy="38" r="2" fill="#000"/><path d="M42 20 L28 15" stroke="#bc6c25" stroke-width="3"/></svg>`,
+            mariposa: `<svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="5" ry="25" fill="#2b2d42"/><path d="M45 35 Q20 20 25 50 Q30 60 45 55 Z" fill="#4cc9f0"/><path d="M55 35 Q80 20 75 50 Q70 60 55 55 Z" fill="#4cc9f0"/><path d="M45 55 Q20 60 30 85 Q45 80 45 65 Z" fill="#f72585"/><path d="M55 55 Q80 60 70 85 Q55 80 55 65 Z" fill="#f72585"/></svg>`,
+            tortuga: `<svg viewBox="0 0 100 100"><ellipse cx="50" cy="55" rx="25" ry="20" fill="#52b788"/><ellipse cx="50" cy="55" rx="20" ry="15" fill="#2d6a4f"/><circle cx="72" cy="55" r="9" fill="#52b788"/><circle cx="75" cy="53" r="2" fill="#000"/><circle cx="28" cy="42" r="6" fill="#52b788"/><circle cx="72" cy="68" r="6" fill="#52b788"/><circle cx="28" cy="68" r="6" fill="#52b788"/></svg>`,
+            lentes: `<svg viewBox="0 0 100 100"><rect x="18" y="40" width="28" height="22" rx="5" fill="none" stroke="#ffb703" stroke-width="5"/><rect x="54" y="40" width="28" height="22" rx="5" fill="none" stroke="#ffb703" stroke-width="5"/><line x1="46" y1="48" x2="54" y2="48" stroke="#ffb703" stroke-width="4"/><path d="M18 45 L10 38 M82 45 L90 38" stroke="#ffb703" stroke-width="4" stroke-linecap="round"/></svg>`,
+            avion: `<svg viewBox="0 0 100 100"><path d="M15 50 L85 45 L60 55 L55 75 Z" fill="#a8dadc"/><polygon points="40,47 65,46 55,54" fill="#457b9d"/></svg>`,
+            barco: `<svg viewBox="0 0 100 100"><path d="M20 65 L80 65 L70 82 L30 82 Z" fill="#e76f51"/><polygon points="50,20 50,60 75,45" fill="#f1faee"/><polygon points="50,22 50,58 28,38" fill="#a8dadc"/></svg>`,
+            reloj: `<svg viewBox="0 0 100 100"><circle cx="50" cy="52" r="32" fill="none" stroke="#ffb703" stroke-width="6"/><circle cx="50" cy="52" r="3" fill="#ffb703"/><line x1="50" y1="52" x2="50" y2="35" stroke="#f1faee" stroke-width="4"/><line x1="50" y1="52" x2="65" y2="52" stroke="#f1faee" stroke-width="4"/><path d="M42 18 L58 18" stroke="#ffb703" stroke-width="5"/></svg>`,
+            taza: `<svg viewBox="0 0 100 100"><path d="M30 40 L70 40 L65 75 C65 80 35 80 35 75 Z" fill="#f1faee"/><path d="M70 48 Q85 48 85 60 Q85 72 70 68" fill="none" stroke="#f1faee" stroke-width="6"/><path d="M40 30 Q45 20 50 25 M55 30 Q60 20 65 25" stroke="#a8dadc" stroke-width="3" stroke-linecap="round" fill="none"/></svg>`,
+            hamburguesa: `<svg viewBox="0 0 100 100"><path d="M25 45 Q50 20 75 45 Z" fill="#f4a261"/><rect x="22" y="48" width="56" height="8" rx="3" fill="#e76f51"/><rect x="20" y="58" width="60" height="10" rx="3" fill="#2a9d8f"/><path d="M25 70 Q50 85 75 70 Z" fill="#f4a261"/></svg>`,
+            cangrejo: `<svg viewBox="0 0 100 100"><ellipse cx="50" cy="60" rx="25" ry="18" fill="#e63946"/><circle cx="40" cy="48" r="4" fill="#fff"/><circle cx="40" cy="48" r="2" fill="#000"/><circle cx="60" cy="48" r="4" fill="#fff"/><circle cx="60" cy="48" r="2" fill="#000"/><path d="M28 50 Q15 40 22 30 M72 50 Q85 40 78 30" stroke="#e63946" stroke-width="5" stroke-linecap="round" fill="none"/></svg>`,
+            pulpo: `<svg viewBox="0 0 100 100"><circle cx="50" cy="45" r="22" fill="#7209b7"/><circle cx="42" cy="42" r="4" fill="#4cc9f0"/><circle cx="58" cy="42" r="4" fill="#4cc9f0"/><path d="M35 60 Q30 85 25 80 M42 60 Q45 88 40 85 M58 60 Q55 88 60 85 M65 60 Q70 85 75 80" stroke="#7209b7" stroke-width="6" stroke-linecap="round" fill="none"/></svg>`,
+            celular: `<svg viewBox="0 0 100 100"><rect x="32" y="15" width="36" height="70" rx="8" fill="#2b2d42"/><rect x="37" y="22" width="26" height="50" rx="3" fill="#8d99ae"/><circle cx="50" cy="78" r="3" fill="#fff"/></svg>`,
+            microfono: `<svg viewBox="0 0 100 100"><rect x="44" y="55" width="12" height="25" rx="3" fill="#adb5bd"/><path d="M35 35 C35 20 65 20 65 35 L65 48 C65 63 35 63 35 48 Z" fill="#495057"/><path d="M32 40 Q25 40 25 55 Q25 65 40 68" fill="none" stroke="#adb5bd" stroke-width="4" stroke-linecap="round"/></svg>`,
+            lapiz: `<svg viewBox="0 0 100 100"><polygon points="70,20 80,30 40,70 30,60" fill="#ffb703"/><polygon points="30,60 40,70 20,80" fill="#fefae0"/><polygon points="20,80 25,75 25,75" fill="#2b2d42"/><rect x="65" y="15" width="15" height="15" rx="3" fill="#e63946"/></svg>`,
+            dinosaurio: `<svg viewBox="0 0 100 100"><path d="M30 75 L30 55 Q30 35 45 35 L60 45 L75 55 L85 65 L85 75 Z" fill="#52b788"/><circle cx="55" cy="30" r="10" fill="#52b788"/><circle cx="58" cy="28" r="2" fill="#000"/><path d="M25 75 L20 85 M35 75 L33 85 M75 75 L73 85 M82 75 L84 85" stroke="#2d6a4f" stroke-width="5" stroke-linecap="round"/></svg>`,
+            oso: `<svg viewBox="0 0 100 100"><circle cx="50" cy="55" r="28" fill="#bc6c25"/><circle cx="32" cy="35" r="12" fill="#bc6c25"/><circle cx="68" cy="35" r="12" fill="#bc6c25"/><circle cx="50" cy="62" r="12" fill="#dda15e"/><circle cx="42" cy="48" r="4" fill="#283618"/><circle cx="58" cy="48" r="4" fill="#283618"/><circle cx="50" cy="58" r="4" fill="#283618"/></svg>`,
+            silla: `<svg viewBox="0 0 100 100"><rect x="35" y="25" width="30" height="35" rx="3" fill="#dda15e"/><rect x="30" y="60" width="40" height="8" rx="2" fill="#bc6c25"/><rect x="33" y="68" width="6" height="20" fill="#8d99ae"/><rect x="61" y="68" width="6" height="20" fill="#8d99ae"/></svg>`,
+            mesa: `<svg viewBox="0 0 100 100"><rect x="15" y="35" width="70" height="10" rx="3" fill="#dda15e"/><rect x="22" y="45" width="6" height="35" fill="#bc6c25"/><rect x="72" y="45" width="6" height="35" fill="#bc6c25"/></svg>`,
+            llama: `<svg viewBox="0 0 100 100"><ellipse cx="50" cy="60" rx="22" ry="16" fill="#fefae0"/><path d="M60 45 L65 20 L55 35 Z" fill="#fefae0"/><circle cx="65" cy="20" r="8" fill="#fefae0"/><circle cx="68" cy="18" r="2" fill="#000"/><path d="M35 75 L30 88 M65 75 L70 88" stroke="#bc6c25" stroke-width="5" stroke-linecap="round"/></svg>`,
+            corazon: `<svg viewBox="0 0 100 100"><path d="M50 30 Q35 10 20 30 Q5 50 50 85 Q95 50 80 30 Q65 10 50 30 Z" fill="#e63946"/></svg>`,
+            cactus: `<svg viewBox="0 0 100 100"><rect x="42" y="30" width="16" height="55" rx="8" fill="#2a9d8f"/><path d="M30 45 L30 35 Q30 30 38 30 L42 30" fill="none" stroke="#2a9d8f" stroke-width="6" stroke-linecap="round"/><path d="M58 55 L70 55 Q75 55 75 48 L75 45" fill="none" stroke="#2a9d8f" stroke-width="6" stroke-linecap="round"/></svg>`,
+            botella: `<svg viewBox="0 0 100 100"><rect x="42" y="15" width="16" height="15" rx="2" fill="#457b9d"/><path d="M35 30 L65 30 L70 82 L30 82 Z" fill="#a8dadc"/></svg>`,
+            hongo: `<svg viewBox="0 0 100 100"><path d="M25 45 Q50 15 75 45 Z" fill="#e63946"/><circle cx="40" cy="32" r="5" fill="#fff"/><circle cx="60" cy="35" r="4" fill="#fff"/><rect x="44" y="45" width="12" height="40" rx="4" fill="#fefae0"/></svg>`,
+            pajaro: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="22" fill="#4cc9f0"/><circle cx="62" cy="42" r="5" fill="#fff"/><circle cx="64" cy="42" r="2" fill="#000"/><polygon points="68,45 80,48 68,52" fill="#ffb703"/><path d="M30 60 Q20 75 10 65" stroke="#f72585" stroke-width="4" fill="none"/></svg>`,
+            papel: `<svg viewBox="0 0 100 100"><polygon points="20,70 80,70 50,25" fill="#fefae0"/><polygon points="50,25 80,70 65,85" fill="#ced4da"/><polygon points="20,70 50,25 35,85" fill="#adb5bd"/></svg>`,
+            pastel: `<svg viewBox="0 0 100 100"><rect x="25" y="45" width="50" height="35" rx="4" fill="#ff70a6"/><rect x="20" y="35" width="60" height="12" rx="4" fill="#fefae0"/><rect x="47" y="20" width="6" height="15" fill="#ffb703"/><circle cx="50" cy="16" r="4" fill="#e63946"/></svg>`
         };
 
         const consignas = [
@@ -361,44 +392,44 @@
             { name: "Flor", icon: "flor" },
             { name: "Manzana", icon: "manzana" },
             { name: "Banana", icon: "banana" },
-            { name: "Zapatilla", icon: "default" },
+            { name: "Zapatilla", icon: "zapatilla" },
             { name: "Sombrero", icon: "sombrero" },
             { name: "Casa", icon: "casa" },
             { name: "Sol", icon: "sol" },
-            { name: "Luna", icon: "default" },
-            { name: "Estrella", icon: "default" },
+            { name: "Luna", icon: "luna" },
+            { name: "Estrella", icon: "estrella" },
             { name: "Helado", icon: "helado" },
-            { name: "Pizza", icon: "default" },
-            { name: "Hueso", icon: "default" },
+            { name: "Pizza", icon: "pizza" },
+            { name: "Hueso", icon: "hueso" },
             { name: "Guitarra", icon: "guitarra" },
-            { name: "Pelota", icon: "default" },
-            { name: "Muñeco de nieve", icon: "default" },
-            { name: "Mariposa", icon: "default" },
-            { name: "Tortuga", icon: "default" },
-            { name: "Lentes de sol", icon: "default" },
-            { name: "Avión", icon: "default" },
-            { name: "Barco", icon: "default" },
-            { name: "Reloj", icon: "default" },
-            { name: "Taza de café", icon: "default" },
-            { name: "Hamburguesa", icon: "default" },
-            { name: "Cangrejo", icon: "default" },
-            { name: "Pulpo", icon: "default" },
-            { name: "Zapato", icon: "default" },
-            { name: "Teléfono celular", icon: "default" },
-            { name: "Micrófono", icon: "default" },
-            { name: "Lápiz", icon: "default" },
-            { name: "Dinosaurio", icon: "default" },
-            { name: "Oso", icon: "default" },
-            { name: "Silla", icon: "default" },
-            { name: "Mesa", icon: "default" },
-            { name: "Llama / Alpaca", icon: "default" },
-            { name: "Corazón", icon: "default" },
-            { name: "Cactus", icon: "default" },
-            { name: "Botella", icon: "default" },
-            { name: "Hongo", icon: "default" },
-            { name: "Pájaro", icon: "default" },
-            { name: "Avión de papel", icon: "default" },
-            { name: "Tarta / Pastel", icon: "default" }
+            { name: "Pelota", icon: "pelota" },
+            { name: "Muñeco de nieve", icon: "nieve" },
+            { name: "Mariposa", icon: "mariposa" },
+            { name: "Tortuga", icon: "tortuga" },
+            { name: "Lentes de sol", icon: "lentes" },
+            { name: "Avión", icon: "avion" },
+            { name: "Barco", icon: "barco" },
+            { name: "Reloj", icon: "reloj" },
+            { name: "Taza de café", icon: "taza" },
+            { name: "Hamburguesa", icon: "hamburguesa" },
+            { name: "Cangrejo", icon: "cangrejo" },
+            { name: "Pulpo", icon: "pulpo" },
+            { name: "Zapato", icon: "zapatilla" },
+            { name: "Teléfono celular", icon: "celular" },
+            { name: "Micrófono", icon: "microfono" },
+            { name: "Lápiz", icon: "lapiz" },
+            { name: "Dinosaurio", icon: "dinosaurio" },
+            { name: "Oso", icon: "oso" },
+            { name: "Silla", icon: "silla" },
+            { name: "Mesa", icon: "mesa" },
+            { name: "Llama / Alpaca", icon: "llama" },
+            { name: "Corazón", icon: "corazon" },
+            { name: "Cactus", icon: "cactus" },
+            { name: "Botella", icon: "botella" },
+            { name: "Hongo", icon: "hongo" },
+            { name: "Pájaro", icon: "pajaro" },
+            { name: "Avión de papel", icon: "papel" },
+            { name: "Tarta / Pastel", icon: "pastel" }
         ];
 
         let totalTimeSeconds = 120;
@@ -470,7 +501,7 @@
             promptText.textContent = item.name;
 
             if (currentMode === "both") {
-                const svgContent = svgIcons[item.icon] || svgIcons.default;
+                const svgContent = svgIcons[item.icon] || svgIcons.pelota;
                 imageContainer.innerHTML = svgContent;
                 imageContainer.classList.remove('hidden');
             } else {
