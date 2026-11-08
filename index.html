@@ -57,7 +57,7 @@
         .subtitle {
             font-size: 0.9rem;
             color: #8d99ae;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .card {
@@ -71,29 +71,34 @@
         .selector-group {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 15px;
             margin-bottom: 20px;
+            text-align: left;
         }
 
         label {
             font-weight: bold;
             color: #e0e0e0;
+            font-size: 0.95rem;
+            display: block;
+            margin-bottom: 5px;
         }
 
         select {
+            width: 100%;
             padding: 12px;
             border-radius: 8px;
             border: none;
             background: #0f3460;
             color: #fff;
-            font-size: 1.1rem;
+            font-size: 1rem;
             text-align: center;
             cursor: pointer;
             outline: none;
         }
 
         .prompt-box {
-            min-height: 120px;
+            min-height: 180px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -110,7 +115,7 @@
             color: #8d99ae;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
         .prompt-text {
@@ -118,10 +123,30 @@
             font-weight: bold;
             color: var(--accent);
             line-height: 1.2;
+            margin-bottom: 10px;
+        }
+
+        .image-container {
+            width: 110px;
+            height: 110px;
+            margin-top: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 50%;
+            padding: 10px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        .image-container svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.4));
         }
 
         .timer-display {
-            font-size: 4rem;
+            font-size: 3.8rem;
             font-weight: 900;
             font-family: monospace;
             color: #fff;
@@ -242,19 +267,28 @@
         <!-- PANTALLA DE CONFIGURACIÓN -->
         <div id="setup-screen" class="card">
             <div class="selector-group">
-                <label for="time-select">Duración del temporizador:</label>
-                <select id="time-select">
-                    <option value="1">1 Minuto</option>
-                    <option value="2" selected>2 Minutos</option>
-                    <option value="3">3 Minutos</option>
-                    <option value="4">4 Minutos</option>
-                    <option value="5">5 Minutos</option>
-                    <option value="6">6 Minutos</option>
-                    <option value="7">7 Minutos</option>
-                    <option value="8">8 Minutos</option>
-                    <option value="9">9 Minutos</option>
-                    <option value="10">10 Minutos</option>
-                </select>
+                <div>
+                    <label for="time-select">Duración del temporizador:</label>
+                    <select id="time-select">
+                        <option value="1">1 Minuto</option>
+                        <option value="2" selected>2 Minutos</option>
+                        <option value="3">3 Minutos</option>
+                        <option value="4">4 Minutos</option>
+                        <option value="5">5 Minutos</option>
+                        <option value="6">6 Minutos</option>
+                        <option value="7">7 Minutos</option>
+                        <option value="8">8 Minutos</option>
+                        <option value="9">9 Minutos</option>
+                        <option value="10">10 Minutos</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="mode-select">Modo de visualización:</label>
+                    <select id="mode-select">
+                        <option value="both" selected>Palabra + Dibujo 3D</option>
+                        <option value="text">Solo Palabra</option>
+                    </select>
+                </div>
             </div>
             <button id="start-btn" class="btn-primary">¡EMPEZAR RONDA!</button>
             <br>
@@ -266,6 +300,7 @@
             <div class="prompt-box">
                 <span>Tenés que modelar:</span>
                 <div id="prompt-text" class="prompt-text">---</div>
+                <div id="image-container" class="image-container hidden"></div>
             </div>
 
             <div id="timer-display" class="timer-display">00:00</div>
@@ -286,15 +321,84 @@
     </div>
 
     <script>
-        // Lista de más de 50 objetos y animales sencillos
+        // SVG gráficos estilo 3D plastilina
+        const svgIcons = {
+            caracol: `<svg viewBox="0 0 100 100"><circle cx="45" cy="50" r="30" fill="#ffb703" stroke="#fb8500" stroke-width="4"/><circle cx="45" cy="50" r="20" fill="#fb8500"/><path d="M15 75 Q45 85 85 75 Q95 75 90 65 Q85 55 75 60 Z" fill="#2a9d8f"/><circle cx="82" cy="52" r="4" fill="#fff"/><circle cx="83" cy="52" r="2" fill="#000"/><path d="M78 58 Q72 45 70 40 M82 58 Q85 45 88 40" stroke="#2a9d8f" stroke-width="3" stroke-linecap="round"/></svg>`,
+            rana: `<svg viewBox="0 0 100 100"><ellipse cx="50" cy="60" rx="35" ry="25" fill="#52b788"/><circle cx="35" cy="35" r="14" fill="#52b788"/><circle cx="65" cy="35" r="14" fill="#52b788"/><circle cx="35" cy="35" r="8" fill="#fff"/><circle cx="65" cy="35" r="8" fill="#fff"/><circle cx="35" cy="35" r="4" fill="#000"/><circle cx="65" cy="65" r="4" fill="#000"/><path d="M35 65 Q50 75 65 65" stroke="#1b4332" stroke-width="4" stroke-linecap="round" fill="none"/></svg>`,
+            perro: `<svg viewBox="0 0 100 100"><circle cx="50" cy="45" r="28" fill="#d4a373"/><ellipse cx="25" cy="45" rx="8" ry="18" fill="#bc6c25"/><ellipse cx="75" cy="45" rx="8" ry="18" fill="#bc6c25"/><ellipse cx="50" cy="55" rx="12" ry="8" fill="#fefae0"/><circle cx="50" cy="52" r="4" fill="#2b2d42"/><circle cx="40" cy="40" r="3" fill="#2b2d42"/><circle cx="60" cy="40" r="3" fill="#2b2d42"/></svg>`,
+            gato: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="28" fill="#f72585"/><polygon points="25,30 35,10 45,28" fill="#b5179e"/><polygon points="75,30 65,10 55,28" fill="#b5179e"/><circle cx="40" cy="45" r="4" fill="#4cc9f0"/><circle cx="60" cy="45" r="4" fill="#4cc9f0"/><polygon points="50,52 46,57 54,57" fill="#7209b7"/><path d="M30 55 L15 52 M30 58 L15 60 M70 55 L85 52 M70 58 L85 60" stroke="#4cc9f0" stroke-width="2"/></svg>`,
+            cocodrilo: `<svg viewBox="0 0 100 100"><path d="M10 60 Q50 40 90 60 L85 70 Q50 55 15 70 Z" fill="#38b000"/><polygon points="25,48 30,42 35,48 40,42 45,48 50,42 55,48" fill="#70e000"/><circle cx="75" cy="48" r="5" fill="#fff"/><circle cx="75" cy="48" r="2" fill="#000"/></svg>`,
+            patito: `<svg viewBox="0 0 100 100"><ellipse cx="45" cy="65" rx="25" ry="18" fill="#ffb703"/><circle cx="65" cy="40" r="16" fill="#ffb703"/><path d="M78 40 L95 43 L78 48 Z" fill="#fb8500"/><circle cx="68" cy="35" r="3" fill="#000"/></svg>`,
+            auto: `<svg viewBox="0 0 100 100"><path d="M15 60 L25 40 L65 40 L80 60 Z" fill="#e63946"/><rect x="10" y="55" width="80" height="20" rx="5" fill="#e63946"/><circle cx="30" cy="75" r="10" fill="#1d3557"/><circle cx="30" cy="75" r="4" fill="#f1faee"/><circle cx="70" cy="75" r="10" fill="#1d3557"/><circle cx="70" cy="75" r="4" fill="#f1faee"/><polygon points="30,43 45,43 45,55 25,55" fill="#a8dadc"/><polygon points="50,43 62,43 70,55 50,55" fill="#a8dadc"/></svg>`,
+            arbol: `<svg viewBox="0 0 100 100"><rect x="42" y="55" width="16" height="35" rx="4" fill="#9c6644"/><circle cx="50" cy="45" r="25" fill="#52b788"/><circle cx="38" cy="35" r="18" fill="#74c69d"/><circle cx="62" cy="38" r="18" fill="#2d6a4f"/></svg>`,
+            elefante: `<svg viewBox="0 0 100 100"><circle cx="55" cy="45" r="25" fill="#a2d2ff"/><circle cx="35" cy="40" r="15" fill="#bde0fe"/><path d="M70 45 Q85 45 80 70 Q75 75 72 70 Q75 55 65 52" fill="none" stroke="#a2d2ff" stroke-width="8" stroke-linecap="round"/><circle cx="62" cy="38" r="3" fill="#000"/></svg>`,
+            serpiente: `<svg viewBox="0 0 100 100"><path d="M15 70 Q30 40 45 70 T75 70 Q85 70 85 55 Q85 40 70 40" fill="none" stroke="#52b788" stroke-width="12" stroke-linecap="round"/><circle cx="72" cy="36" r="2" fill="#000"/><path d="M64 40 L55 40 M55 40 L50 37 M55 40 L50 43" stroke="#e63946" stroke-width="2"/></svg>`,
+            pez: `<svg viewBox="0 0 100 100"><ellipse cx="45" cy="50" rx="28" ry="20" fill="#ff70a6"/><polygon points="70,50 90,35 85,50 90,65" fill="#ff70a6"/><circle cx="28" cy="45" r="4" fill="#fff"/><circle cx="28" cy="45" r="2" fill="#000"/></svg>`,
+            flor: `<svg viewBox="0 0 100 100"><rect x="47" y="50" width="6" height="40" fill="#2a9d8f"/><circle cx="50" cy="30" r="10" fill="#e76f51"/><circle cx="50" cy="12" r="9" fill="#f4a261"/><circle cx="68" cy="30" r="9" fill="#f4a261"/><circle cx="50" cy="48" r="9" fill="#f4a261"/><circle cx="32" cy="30" r="9" fill="#f4a261"/></svg>`,
+            manzana: `<svg viewBox="0 0 100 100"><circle cx="42" cy="52" r="22" fill="#e63946"/><circle cx="58" cy="52" r="22" fill="#e63946"/><path d="M50 34 Q53 20 60 15" stroke="#6c584c" stroke-width="4" fill="none"/><path d="M50 28 Q65 25 62 35 Z" fill="#52b788"/></svg>`,
+            banana: `<svg viewBox="0 0 100 100"><path d="M20 30 Q30 80 80 70 Q55 85 25 45 Z" fill="#ffb703" stroke="#fb8500" stroke-width="2"/></svg>`,
+            sombrero: `<svg viewBox="0 0 100 100"><ellipse cx="50" cy="70" rx="40" ry="10" fill="#2b2d42"/><rect x="28" y="30" width="44" height="40" rx="5" fill="#2b2d42"/><rect x="28" y="62" width="44" height="8" fill="#d90429"/></svg>`,
+            casa: `<svg viewBox="0 0 100 100"><polygon points="50,20 15,48 85,48" fill="#e63946"/><rect x="25" y="48" width="50" height="40" fill="#f1faee"/><rect x="42" y="63" width="16" height="25" fill="#a8dadc"/><rect x="32" y="55" width="10" height="10" fill="#457b9d"/><rect x="58" y="55" width="10" height="10" fill="#457b9d"/></svg>`,
+            sol: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="20" fill="#ffb703"/><path d="M50 15 L50 25 M50 75 L50 85 M15 50 L25 50 M75 50 L85 50 M25 25 L32 32 M68 68 L75 75 M25 75 L32 68 M68 32 L75 25" stroke="#ffb703" stroke-width="5" stroke-linecap="round"/></svg>`,
+            helado: `<svg viewBox="0 0 100 100"><polygon points="50,88 33,48 67,48" fill="#e76f51"/><circle cx="50" cy="42" r="16" fill="#ffb703"/><circle cx="50" cy="30" r="14" fill="#ff70a6"/><circle cx="50" cy="18" r="4" fill="#d90429"/></svg>`,
+            guitarra: `<svg viewBox="0 0 100 100"><circle cx="40" cy="65" r="18" fill="#b08968"/><circle cx="40" cy="45" r="14" fill="#b08968"/><rect x="37" y="12" width="6" height="30" fill="#7f5539"/><circle cx="40" cy="65" r="5" fill="#2b2d42"/></svg>`,
+            default: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="35" fill="#ffb703"/><text x="50" y="65" font-size="45" font-weight="bold" text-anchor="middle" fill="#16213e">?</text></svg>`
+        };
+
         const consignas = [
-            "Caracol", "Rana", "Perro", "Gato", "Cocodrilo", "Patito", "Auto", "Camioneta", "Árbol", 
-            "Elefante", "Serpiente", "Pez", "Flor", "Manzana", "Banana", "Zapatilla", "Sombrero", 
-            "Casa", "Sol", "Luna", "Estrella", "Helado", "Pizza", "Hueso", "Guitarra", "Pelota", 
-            "Muñeco de nieve", "Mariposa", "Tortuga", "Lentes de sol", "Avión", "Barco", "Reloj", 
-            "Taza de café", "Hamburguesa", "Cangrejo", "Pulpo", "Zapato", "Teléfono celular", 
-            "Micrófono", "Lápiz", "Dinosaurio", "Oso", "Silla", "Mesa", "Llama / Alpaca", 
-            "Corazón", "Cactus", "Botella", "Hongo", "Pájaro", "Avión de papel", "Tarta / Pastel"
+            { name: "Caracol", icon: "caracol" },
+            { name: "Rana", icon: "rana" },
+            { name: "Perro", icon: "perro" },
+            { name: "Gato", icon: "gato" },
+            { name: "Cocodrilo", icon: "cocodrilo" },
+            { name: "Patito", icon: "patito" },
+            { name: "Auto", icon: "auto" },
+            { name: "Camioneta", icon: "auto" },
+            { name: "Árbol", icon: "arbol" },
+            { name: "Elefante", icon: "elefante" },
+            { name: "Serpiente", icon: "serpiente" },
+            { name: "Pez", icon: "pez" },
+            { name: "Flor", icon: "flor" },
+            { name: "Manzana", icon: "manzana" },
+            { name: "Banana", icon: "banana" },
+            { name: "Zapatilla", icon: "default" },
+            { name: "Sombrero", icon: "sombrero" },
+            { name: "Casa", icon: "casa" },
+            { name: "Sol", icon: "sol" },
+            { name: "Luna", icon: "default" },
+            { name: "Estrella", icon: "default" },
+            { name: "Helado", icon: "helado" },
+            { name: "Pizza", icon: "default" },
+            { name: "Hueso", icon: "default" },
+            { name: "Guitarra", icon: "guitarra" },
+            { name: "Pelota", icon: "default" },
+            { name: "Muñeco de nieve", icon: "default" },
+            { name: "Mariposa", icon: "default" },
+            { name: "Tortuga", icon: "default" },
+            { name: "Lentes de sol", icon: "default" },
+            { name: "Avión", icon: "default" },
+            { name: "Barco", icon: "default" },
+            { name: "Reloj", icon: "default" },
+            { name: "Taza de café", icon: "default" },
+            { name: "Hamburguesa", icon: "default" },
+            { name: "Cangrejo", icon: "default" },
+            { name: "Pulpo", icon: "default" },
+            { name: "Zapato", icon: "default" },
+            { name: "Teléfono celular", icon: "default" },
+            { name: "Micrófono", icon: "default" },
+            { name: "Lápiz", icon: "default" },
+            { name: "Dinosaurio", icon: "default" },
+            { name: "Oso", icon: "default" },
+            { name: "Silla", icon: "default" },
+            { name: "Mesa", icon: "default" },
+            { name: "Llama / Alpaca", icon: "default" },
+            { name: "Corazón", icon: "default" },
+            { name: "Cactus", icon: "default" },
+            { name: "Botella", icon: "default" },
+            { name: "Hongo", icon: "default" },
+            { name: "Pájaro", icon: "default" },
+            { name: "Avión de papel", icon: "default" },
+            { name: "Tarta / Pastel", icon: "default" }
         ];
 
         let totalTimeSeconds = 120;
@@ -302,12 +406,16 @@
         let timerInterval = null;
         let isPaused = false;
         let audioCtx = null;
+        let currentMode = "both";
+        let currentPrompt = null;
 
         const setupScreen = document.getElementById('setup-screen');
         const gameScreen = document.getElementById('game-screen');
         const timeSelect = document.getElementById('time-select');
+        const modeSelect = document.getElementById('mode-select');
         const startBtn = document.getElementById('start-btn');
         const promptText = document.getElementById('prompt-text');
+        const imageContainer = document.getElementById('image-container');
         const timerDisplay = document.getElementById('timer-display');
         const progressBar = document.getElementById('progress-bar');
         const pauseBtn = document.getElementById('pause-btn');
@@ -316,14 +424,12 @@
         const voteNotice = document.getElementById('vote-notice');
         const testAudioBtn = document.getElementById('test-audio-btn');
 
-        // Inicializar AudioContext en interacción del usuario
         function initAudio() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
         }
 
-        // Sonido de Alarma usando Web Audio API (Sin archivos MP3 externos)
         function playAlarmSound() {
             initAudio();
             if (audioCtx.state === 'suspended') {
@@ -331,9 +437,7 @@
             }
 
             const now = audioCtx.currentTime;
-            
-            // Secuencia de beeps de alarma festiva
-            const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+            const notes = [523.25, 659.25, 783.99, 1046.50];
             notes.forEach((freq, idx) => {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
@@ -359,6 +463,19 @@
         function getRandomPrompt() {
             const randomIndex = Math.floor(Math.random() * consignas.length);
             return consignas[randomIndex];
+        }
+
+        function displayPrompt(item) {
+            currentPrompt = item;
+            promptText.textContent = item.name;
+
+            if (currentMode === "both") {
+                const svgContent = svgIcons[item.icon] || svgIcons.default;
+                imageContainer.innerHTML = svgContent;
+                imageContainer.classList.remove('hidden');
+            } else {
+                imageContainer.classList.add('hidden');
+            }
         }
 
         function formatTime(seconds) {
@@ -410,11 +527,11 @@
 
         startBtn.addEventListener('click', () => {
             initAudio();
-            const selectedMinutes = parseInt(timeSelect.value);
-            totalTimeSeconds = selectedMinutes * 60;
+            totalTimeSeconds = parseInt(timeSelect.value) * 60;
             timeRemaining = totalTimeSeconds;
+            currentMode = modeSelect.value;
 
-            promptText.textContent = getRandomPrompt();
+            displayPrompt(getRandomPrompt());
             voteNotice.classList.add('hidden');
             pauseBtn.classList.remove('hidden');
             changePromptBtn.classList.remove('hidden');
@@ -433,7 +550,7 @@
         });
 
         changePromptBtn.addEventListener('click', () => {
-            promptText.textContent = getRandomPrompt();
+            displayPrompt(getRandomPrompt());
         });
 
         endBtn.addEventListener('click', () => {
