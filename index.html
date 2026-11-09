@@ -57,7 +57,7 @@
         .subtitle {
             font-size: 0.9rem;
             color: #8d99ae;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .card {
@@ -86,68 +86,48 @@
 
         select {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border-radius: 8px;
             border: none;
             background: #0f3460;
             color: #fff;
-            font-size: 1rem;
+            font-size: 1.1rem;
             text-align: center;
             cursor: pointer;
             outline: none;
         }
 
         .prompt-box {
-            min-height: 220px;
+            min-height: 140px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             background: #0f3460;
             border-radius: 12px;
-            padding: 15px;
+            padding: 20px;
             margin-bottom: 20px;
             border: 2px dashed var(--accent);
         }
 
         .prompt-box span {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: #8d99ae;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .prompt-text {
-            font-size: 1.8rem;
+            font-size: 2.3rem;
             font-weight: bold;
             color: var(--accent);
             line-height: 1.2;
-            margin-bottom: 12px;
-        }
-
-        .image-container {
-            width: 130px;
-            height: 130px;
-            margin-top: 5px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 10px;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
-        }
-
-        .image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            filter: drop-shadow(0px 8px 12px rgba(0,0,0,0.5));
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
 
         .timer-display {
-            font-size: 3.8rem;
+            font-size: 4rem;
             font-weight: 900;
             font-family: monospace;
             color: #fff;
@@ -283,13 +263,6 @@
                         <option value="10">10 Minutos</option>
                     </select>
                 </div>
-                <div>
-                    <label for="mode-select">Modo de visualización:</label>
-                    <select id="mode-select">
-                        <option value="both" selected>Palabra + Dibujo 3D</option>
-                        <option value="text">Solo Palabra</option>
-                    </select>
-                </div>
             </div>
             <button id="start-btn" class="btn-primary">¡EMPEZAR RONDA!</button>
             <br>
@@ -301,9 +274,6 @@
             <div class="prompt-box">
                 <span>Tenés que modelar:</span>
                 <div id="prompt-text" class="prompt-text">---</div>
-                <div id="image-container" class="image-container hidden">
-                    <img id="prompt-img" src="" alt="Ejemplo 3D">
-                </div>
             </div>
 
             <div id="timer-display" class="timer-display">00:00</div>
@@ -324,58 +294,15 @@
     </div>
 
     <script>
-        // Imágenes 3D HD de alta calidad libres de derechos (Microsoft Fluent 3D Assets CDN público)
+        // Lista completa de 53 objetos y animales sencillos
         const consignas = [
-            { name: "Cocodrilo", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Crocodile/3D/crocodile_3d.png" },
-            { name: "Caracol", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Snail/3D/snail_3d.png" },
-            { name: "Rana", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Frog/3D/frog_3d.png" },
-            { name: "Perro", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Dog%20face/3D/dog_face_3d.png" },
-            { name: "Gato", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Cat%20face/3D/cat_face_3d.png" },
-            { name: "Patito", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Duck/3D/duck_3d.png" },
-            { name: "Auto", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Automobile/3D/automobile_3d.png" },
-            { name: "Camioneta", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Pickup%20truck/3D/pickup_truck_3d.png" },
-            { name: "Árbol", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Deciduous%20tree/3D/deciduous_tree_3d.png" },
-            { name: "Elefante", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Elephant/3D/elephant_3d.png" },
-            { name: "Serpiente", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Snake/3D/snake_3d.png" },
-            { name: "Pez", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Fish/3D/fish_3d.png" },
-            { name: "Flor", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Cherry%20blossom/3D/cherry_blossom_3d.png" },
-            { name: "Manzana", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Red%20apple/3D/red_apple_3d.png" },
-            { name: "Banana", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Banana/3D/banana_3d.png" },
-            { name: "Zapatilla", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Running%20shoe/3D/running_shoe_3d.png" },
-            { name: "Sombrero", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Top%20hat/3D/top_hat_3d.png" },
-            { name: "Casa", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/House/3D/house_3d.png" },
-            { name: "Sol", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Sun/3D/sun_3d.png" },
-            { name: "Luna", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Crescent%20moon/3D/crescent_moon_3d.png" },
-            { name: "Estrella", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Star/3D/star_3d.png" },
-            { name: "Helado", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Soft%20ice%20cream/3D/soft_ice_cream_3d.png" },
-            { name: "Pizza", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Pizza/3D/pizza_3d.png" },
-            { name: "Hueso", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Bone/3D/bone_3d.png" },
-            { name: "Guitarra", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Guitar/3D/guitar_3d.png" },
-            { name: "Pelota", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Soccer%20ball/3D/soccer_ball_3d.png" },
-            { name: "Muñeco de nieve", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Snowman/3D/snowman_3d.png" },
-            { name: "Mariposa", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Butterfly/3D/butterfly_3d.png" },
-            { name: "Tortuga", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Turtle/3D/turtle_3d.png" },
-            { name: "Lentes de sol", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Sunglasses/3D/sunglasses_3d.png" },
-            { name: "Avión", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Airplane/3D/airplane_3d.png" },
-            { name: "Barco", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Sailboat/3D/sailboat_3d.png" },
-            { name: "Reloj", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Mantel%20clock/3D/mantel_clock_3d.png" },
-            { name: "Taza de café", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Hot%20beverage/3D/hot_beverage_3d.png" },
-            { name: "Hamburguesa", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Hamburger/3D/hamburger_3d.png" },
-            { name: "Cangrejo", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Crab/3D/crab_3d.png" },
-            { name: "Pulpo", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Octopus/3D/octopus_3d.png" },
-            { name: "Teléfono celular", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Mobile%20phone/3D/mobile_phone_3d.png" },
-            { name: "Micrófono", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Microphone/3D/microphone_3d.png" },
-            { name: "Lápiz", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Pencil/3D/pencil_3d.png" },
-            { name: "Dinosaurio", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/T-Rex/3D/t-rex_3d.png" },
-            { name: "Oso", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Bear/3D/bear_3d.png" },
-            { name: "Silla", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Chair/3D/chair_3d.png" },
-            { name: "Llama / Alpaca", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Llama/3D/llama_3d.png" },
-            { name: "Corazón", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Red%20heart/3D/red_heart_3d.png" },
-            { name: "Cactus", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Cactus/3D/cactus_3d.png" },
-            { name: "Botella", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Baby%20bottle/3D/baby_bottle_3d.png" },
-            { name: "Hongo", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Mushroom/3D/mushroom_3d.png" },
-            { name: "Pájaro", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Bird/3D/bird_3d.png" },
-            { name: "Tarta / Pastel", img: "https://raw.githubusercontent.com/TBD54566975/fluentui-emoji/main/assets/Birthday%20cake/3D/birthday_cake_3d.png" }
+            "Caracol", "Rana", "Perro", "Gato", "Cocodrilo", "Patito", "Auto", "Camioneta", "Árbol", 
+            "Elefante", "Serpiente", "Pez", "Flor", "Manzana", "Banana", "Zapatilla", "Sombrero", 
+            "Casa", "Sol", "Luna", "Estrella", "Helado", "Pizza", "Hueso", "Guitarra", "Pelota", 
+            "Muñeco de nieve", "Mariposa", "Tortuga", "Lentes de sol", "Avión", "Barco", "Reloj", 
+            "Taza de café", "Hamburguesa", "Cangrejo", "Pulpo", "Zapato", "Teléfono celular", 
+            "Micrófono", "Lápiz", "Dinosaurio", "Oso", "Silla", "Mesa", "Llama / Alpaca", 
+            "Corazón", "Cactus", "Botella", "Hongo", "Pájaro", "Avión de papel", "Tarta / Pastel"
         ];
 
         let totalTimeSeconds = 120;
@@ -383,16 +310,12 @@
         let timerInterval = null;
         let isPaused = false;
         let audioCtx = null;
-        let currentMode = "both";
 
         const setupScreen = document.getElementById('setup-screen');
         const gameScreen = document.getElementById('game-screen');
         const timeSelect = document.getElementById('time-select');
-        const modeSelect = document.getElementById('mode-select');
         const startBtn = document.getElementById('start-btn');
         const promptText = document.getElementById('prompt-text');
-        const promptImg = document.getElementById('prompt-img');
-        const imageContainer = document.getElementById('image-container');
         const timerDisplay = document.getElementById('timer-display');
         const progressBar = document.getElementById('progress-bar');
         const pauseBtn = document.getElementById('pause-btn');
@@ -440,17 +363,6 @@
         function getRandomPrompt() {
             const randomIndex = Math.floor(Math.random() * consignas.length);
             return consignas[randomIndex];
-        }
-
-        function displayPrompt(item) {
-            promptText.textContent = item.name;
-
-            if (currentMode === "both") {
-                promptImg.src = item.img;
-                imageContainer.classList.remove('hidden');
-            } else {
-                imageContainer.classList.add('hidden');
-            }
         }
 
         function formatTime(seconds) {
@@ -504,9 +416,8 @@
             initAudio();
             totalTimeSeconds = parseInt(timeSelect.value) * 60;
             timeRemaining = totalTimeSeconds;
-            currentMode = modeSelect.value;
 
-            displayPrompt(getRandomPrompt());
+            promptText.textContent = getRandomPrompt();
             voteNotice.classList.add('hidden');
             pauseBtn.classList.remove('hidden');
             changePromptBtn.classList.remove('hidden');
@@ -525,7 +436,7 @@
         });
 
         changePromptBtn.addEventListener('click', () => {
-            displayPrompt(getRandomPrompt());
+            promptText.textContent = getRandomPrompt();
         });
 
         endBtn.addEventListener('click', () => {
